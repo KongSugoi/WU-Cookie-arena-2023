@@ -16,6 +16,40 @@
 
 ```**CHH{If_u_w4nt_1_will_aft3rnull_u}**```
 
+## TrivialFTP
+
+### Solution
+
+[Đề bài](https://drive.google.com/file/d/1AqsNR8eKe527iZJf1koNRs1pl9YhK0Ev/view?usp=drive_link)
+
+### Solve 
+
+Đây là 1 file pcap dữ liệu TFTP, ta sử dụng các lệnh với tool tshark để kiểm tra gói tin
+
+`tshark -qz io,phs -r TrivialFTP.pcapng`
+
+![for](https://raw.githubusercontent.com/KongSugoi/WU-Cookie-arena-2023/main/Picture/for_2.png)
+
+Nhận thấy lưu lượng gói tin được chuyển đi ở TFTP là khá lớn, vậy nên tôi sử dụng lệnh để lấy gói tin đấy ra 
+
+`tshark -r TrivialFTP.pcapng --export-objects "tftp,object" -2 > /dev/null`
+
+![for](https://raw.githubusercontent.com/KongSugoi/WU-Cookie-arena-2023/main/Picture/for_3.png)
+
+Mở thử file pdf thì thấy không được, có thể file bị lỗi gì đó, kiểm tra lại file pcap thì thấy rằng file pdf này được chuyển đi với mã hóa netascii => cần phải sửa các byte dạng _\x0d\x0a_ thành _\x0a_ và _\x0d\x00_ thành _\x0d_ (thông tin lấy từ [wiki](https://en.wikipedia.org/wiki/Trivial_File_Transfer_Protocol))
+
+> Netascii is a modified form of ASCII, defined in RFC 764. It consists of an 8-bit extension of the 7-bit ASCII character space from 0x20 to 0x7F (the printable characters and the space) and eight of the control characters. The allowed control characters include the null (0x00), the line feed (LF, 0x0A), and the carriage return (CR, 0x0D). Netascii also requires that the end of line marker on a host be translated to the character pair CR LF for transmission, and that any CR must be followed by either a LF or the null.
+
+Sử dụng Hxd để Replace các byte
+
+![for](https://raw.githubusercontent.com/KongSugoi/WU-Cookie-arena-2023/main/Picture/for_4.png)
+
+Lưu file, mở lại file pdf và nhận được flag 
+
+![for](https://raw.githubusercontent.com/KongSugoi/WU-Cookie-arena-2023/main/Picture/for_5.png)
+
+```**CHH{FTP_4nd_TFTP_4r3_b0th_un$af3}**```
+
 # Steganography
 
 ## CutieK1tty
